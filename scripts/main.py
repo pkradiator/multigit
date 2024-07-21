@@ -1,9 +1,17 @@
 import subprocess
 import os
-import shutil
 import json
 
 CONFIG_FILE = 'git_accounts.json'
+
+
+def check_shell():
+    try:
+        shell = os.environ['SHELL']
+    except :
+        print("$SHELL evironment variable could not be found\nCannot Automatically detect shell (termianl).")
+
+
 
 def load_accounts():
     if os.path.exists(CONFIG_FILE):
@@ -68,6 +76,9 @@ def add_account(accounts):
 
     name = input("Enter Git user name: ").strip()
     email = input("Enter Git user email: ").strip()
+    print("""Do you want to generate SSH key or do you already have one?
+1. Already have one 
+          """)
     ssh_key = input("Enter path to SSH key: ").strip()
 
     accounts[account_name] = {
