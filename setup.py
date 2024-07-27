@@ -40,18 +40,18 @@ def cp_scripts():
         file2_path = repo_dir / 'scripts' / 'multigit'
         shutil.copy(file1_path, instl_loc)
         shutil.copy(file2_path, instl_loc)
-        a = True
-        while a == True:
-        
-            response = input("Do you want to detect older keys ?\nType y or n and hit enter")
-            if (response == 'y'):
-                a = False
-                detect_keys()
+    a = True
+    while a == True:
+    
+        response = input("Do you want to detect older keys ?\nType y or n and hit enter\n")
+        if (response == 'y'):
+            a = False
+            detect_keys()
 
-            elif(response == 'n'):
-                a= False
-            else:
-                print("Wrong response!! Answer in y or n")
+        elif(response == 'n'):
+            a= False
+        else:
+            print("Wrong response!! Answer in y or n")
 
 def detect_keys():
     home = os.path.expanduser('~/')
@@ -60,39 +60,42 @@ def detect_keys():
     if key_list == []:
         print("No older keys detected.")
     else:
-        print(len(key_list), "keys are detected which are as follows")
-        for i,j in key_list, range(len(key_list)):
+        print(len(key_list), "keys are detected which are as follows:")
+        for j,i in enumerate(key_list):
             print(j+1, i)
 
         a = True
         while a == True:
-            response =input("Do you want to use some or all of these keys.\nNote - You will be promted for following details related to the keys\n1.Git username\n2.Email address\nPress y or n and Hit Enter")
+            response =input("Do you want to use some or all of these keys.\nNote - You will be promted for following details related to the keys\n1.Git username\n2.Email address\nPress y or n and Hit Enter\n")
             if response == 'y':
                 a=False
                 acc_list = []
                 for i,j in enumerate(key_list):
                     b = True 
                     while b == True:
-                        decision= input("Do you want to associate an account with the key:", j,"\nType y or n and hit enter.")
+                        decision= input(f"Do you want to associate an account with the key: {j}\nType y or n and hit enter.\n")
                         if decision == 'n':
+                            b=False
                             pass
                         elif decision == 'y':
-                            acc_name = input(f"Enter the account name(github username, bitbucket username etc. where {j} key is used):\n").strip()
+                            b=False
+                            print(f"Enter the account name(github username, bitbucket username etc. where {j} key is used):", end=' ')
+                            acc_name = input().strip()
                             email = input("Enter the email associated with account:").strip()
                             acc_list.append({'id_no':i,'acc_name':acc_name, 'email':email, 'key_loc':j[:-4]})
                         else:
-                            print("Wrong Response. Type y or n and hit enter.")
+                            print("Wrong Response. Type y or n and hit enter.\n")
                 acc_file = os.path.expanduser('~/.multigit/data.json')
                 with open(acc_file, 'w+') as f:
                     json.dump(acc_list, f)
                 
-
             elif response == 'n':
                 a=False
             else:
-                print("Wrong Response. Press y or n and hit Enter.")
+                print("Wrong Response. Press y or n and hit Enter.\n")
 
 
 if __name__ == "__main__":
     check_shell()
+    cp_scripts()
     
