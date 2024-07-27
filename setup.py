@@ -38,6 +38,19 @@ def cp_scripts():
         file2_path = repo_dir / 'scripts' / 'multigit'
         shutil.copy(file1_path, instl_loc)
         shutil.copy(file2_path, instl_loc)
+        a = True
+        while a == True:
+        
+            response = input("Do you want to detect older keys ?\nType y or n and hit enter")
+            if (response == 'y'):
+                a = False
+                detect_keys()
+
+            elif(response == 'n'):
+                a= False
+            else:
+                print("Wrong response!! Answer in y or n")
+
 
 
 if __name__ == "__main__":
