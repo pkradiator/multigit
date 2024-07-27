@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 import shutil
+import glob
+import json
 
 def check_shell():
     try:
@@ -51,7 +53,46 @@ def cp_scripts():
             else:
                 print("Wrong response!! Answer in y or n")
 
+def detect_keys():
+    home = os.path.expanduser('~/')
+    key_pattern = home + ".ssh/id_*.pub"
+    key_list = glob.glob(key_pattern)
+    if key_list == []:
+        print("No older keys detected.")
+    else:
+        print(len(key_list), "keys are detected which are as follows")
+        for i,j in key_list, range(len(key_list)):
+            print(j+1, i)
+
+        a = True
+        while a == True:
+            response =input("Do you want to use some or all of these keys.\nNote - You will be promted for following details related to the keys\n1.Git username\n2.Email address\nPress y or n and Hit Enter")
+            if response == 'y':
+                a=False
+                acc_list = []
+                for i,j in enumerate(key_list):
+                    b = True 
+                    while b == True:
+                        decision= input("Do you want to associate an account with the key:", j,"\nType y or n and hit enter.")
+                        if decision == 'n':
+                            pass
+                        elif decision == 'y':
+                            acc_name = input(f"Enter the account name(github username, bitbucket username etc. where {j} key is used):\n").strip()
+                            email = input("Enter the email associated with account:").strip()
+                            acc_list.append({'id_no':i,'acc_name':acc_name, 'email':email, 'key_loc':j[:-4]})
+                        else:
+                            print("Wrong Response. Type y or n and hit enter.")
+                acc_file = os.path.expanduser('~/.multigit/data.json')
+                with open(acc_file, 'w+') as f:
+                    json.dump(acc_list, f)
+                
+
+            elif response == 'n':
+                a=False
+            else:
+                print("Wrong Response. Press y or n and hit Enter.")
 
 
 if __name__ == "__main__":
     check_shell()
+    
