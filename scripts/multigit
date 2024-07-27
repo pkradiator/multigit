@@ -3,16 +3,6 @@ import os
 import json
 
 CONFIG_FILE = 'git_accounts.json'
-
-
-def check_shell():
-    try:
-        shell = os.environ['SHELL']
-    except :
-        print("$SHELL evironment variable could not be found\nCannot Automatically detect shell (termianl).")
-
-
-
 def load_accounts():
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as file:
