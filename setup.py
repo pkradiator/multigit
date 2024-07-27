@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+import shutil
 
 def check_shell():
     try:
@@ -27,6 +29,15 @@ def check_shell():
         profile = None
         logout_profile = None
 
+def cp_scripts():
+    instl_loc = os.path.expanduser('~/.multigit')
+    if os.path.isdir(instl_loc) != True:
+        os.mkdir(instl_loc)
+        repo_dir = Path(__file__).parent.resolve()
+        file1_path = repo_dir / 'scripts' / 'script.sh'
+        file2_path = repo_dir / 'scripts' / 'multigit'
+        shutil.copy(file1_path, instl_loc)
+        shutil.copy(file2_path, instl_loc)
 
 
 if __name__ == "__main__":
