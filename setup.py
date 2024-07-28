@@ -14,7 +14,8 @@ def check_shell():
             profile = os.path.expanduser('~/.zshrc')
             logout_profile = os.path.expanduser('~/.zlogout')
 
-        script = '\n# added by multigit\nsource $HOME/.multigit\n'
+        home = os.path.expanduser('~/')
+        script = '\n# added by multigit\nsource '+home+'.multigit/scripts/script.sh\nexport PATH="'+home+'.multigit/scripts/:$PATH"'
         logout_script = '\n# added by multigit\nssh-add -D\neval $(ssh-agent -k)\ngit config --global --unset user.name\ngit config --global --unset user.email\n'
         if shell.find('bash') != -1 or shell.find('zsh') != -1:
             with open(profile, 'a+') as f, open(logout_profile, 'a+') as g:
@@ -98,4 +99,5 @@ def detect_keys():
 if __name__ == "__main__":
     check_shell()
     cp_scripts()
+    print("Setup is now complete. Type\nmultigit [ACC_NAME]\nwhere [ACC_NAME] has to be replaced with the username of git account to activate that account.For example\n multigit pkradiator\n will switch account to pkradiator.\nIf you are unsure just type multigit without any arguments to start interactive mode.\nEnjoy!!\n")
     
