@@ -29,6 +29,27 @@ def ask_keytype():
         else:
             print("Wrong Response")
 
+def remove_acc():
+    print("Select the account to be removed:\n")
+    with open(os.path.expanduser('~/.multigit/data.json')) as data_file:
+        acc_list = json.load(data_file)
+        for i in range(len(acc_list)):
+            print(f'{i+1}.  {acc_list[i]['acc_name']}')
+        a = True
+        while a == True:
+            try:
+                x = int(input("Enter a value between 1 and 10 (including endpoints)"))
+                if x > len(acc_list) or x < 1:
+                    raise ValueError
+                a = False
+            except ValueError:
+                print("The value you entered is either not an integer or exceeds bounds")
+        removed = acc_list.pop(x-1)
+        print(f"The key with following detail was removed:\nusername = {removed['acc_name']}\nemail = {removed['email']}\nkey = {removed['key_file']}")
+        os.remove(removed['key_file'])
+        os.remove(removed['key_file']+'.pub')
+
+
 if __name__ == "__main__":
     if len(sys.argv) == 1:
         print('Welcome!! You are in interactive mode.')
@@ -38,7 +59,7 @@ if __name__ == "__main__":
                 print(f"The following accounts are available:\n{'No.':4}{'Username':>10}{'email':>20}{'key':>20}")
                 for i,j in enumerate(acc_list):
                     print(f'{i+1:4}{acc_list["acc_name"]:>10}{acc_list["email"]}{acc_list["key_loc"]:>20}')
-            response = input(f"The following actions are available:\n{'1.':4}Add accounts\n{'2.':4}Remove accounts\n{'3.':4}Exit Interactive mode.\nType 1 or 2 and hit enter\n")
+            response = input(f"The following actions are available:\n{'1.':4}Add accounts\n{'2.':4}Remove accounts\n{'3.':4}Exit Interactive mode.\nType 1, 2 or 3 and hit enter\n")
             a= True
             while a == True:
                 if response == '1':
@@ -46,18 +67,21 @@ if __name__ == "__main__":
                     username = input("Enter the account name(github username, bitbucket username etc.): ")
                     email = input("Enter the email associated with the account: ")
                     key_type = ask_keytype()
-                    
+                    subprocess.run(['cd', os.path.expanduser('~/.ssh/')])
+                    subprocess.run(['ssh-keygen','-t',key_type,'-C', email, '-f', 'id_'+key_type+'_'+username])
+                    print("Your key is successfully generated.To use it copy the following key signature to your github, bitbucket or gitlab keypane:\n")
+                    with open(os.path.expanduser('~/.ssh/id_'+key_type+'_'+username+'.pub'), 'r') as keyfile:
+                        contents = keyfile.read()
+                        print(contents)
+                    acc_list.append('id_no':len(acc_list),'acc_name':username, 'email': email, 'key_loc':os.path.expanduser('~/'+'id_'+key_type+'_'+username))
+                    json.dump(acc_list, data_file)
 
                 elif response == '2':
                     a=False
-
+                    remove_acc()
+                    
                 elif response == '3':
                     a=False
-
-
-            
-
-                
     
     elif len(sys.argv) == 2:
         acc_name = sys.argv[1]
