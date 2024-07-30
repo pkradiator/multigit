@@ -15,7 +15,7 @@ def check_shell():
             logout_profile = os.path.expanduser('~/.zlogout')
 
         home = os.path.expanduser('~/')
-        script = '\n# added by multigit\nsource '+home+'.multigit/scripts/script.sh\nexport PATH="'+home+'.multigit/scripts/:$PATH"'
+        script = '\n# added by multigit\nsource '+home+'.multigit/script.sh\nexport PATH="'+home+'.multigit/:$PATH"'
         logout_script = '\n# added by multigit\nssh-add -D\neval $(ssh-agent -k)\ngit config --global --unset user.name\ngit config --global --unset user.email\n'
         if shell.find('bash') != -1 or shell.find('zsh') != -1:
             with open(profile, 'a+') as f, open(logout_profile, 'a+') as g:
