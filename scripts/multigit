@@ -73,7 +73,7 @@ if __name__ == "__main__":
                     with open(os.path.expanduser('~/.ssh/id_'+key_type+'_'+username+'.pub'), 'r') as keyfile:
                         contents = keyfile.read()
                         print(contents)
-                    acc_list.append('id_no':len(acc_list),'acc_name':username, 'email': email, 'key_loc':os.path.expanduser('~/'+'id_'+key_type+'_'+username))
+                    acc_list.append({'id_no':len(acc_list),'acc_name':username, 'email': email, 'key_loc':os.path.expanduser('~/'+'id_'+key_type+'_'+username)})
                     json.dump(acc_list, data_file)
 
                 elif response == '2':
