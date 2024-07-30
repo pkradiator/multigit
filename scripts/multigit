@@ -4,14 +4,64 @@ import sys
 import subprocess
 import os
 
+def ask_keytype():
+    key_type = input("Which key type you want to use:\n1.  rsa (default)\n2.  ecdsa\n3.  ecdsa-sk\n4.  ed25519\n5.  ed25519-sk\n6.  dsa\nAnswer in 1,2,3,4,5 or 6 and hit Enter.")
+    a = True
+    while a == True:
+        if key_type==1:
+            a = False
+            return "rsa"
+        elif key_type ==2:
+            a = False
+            return "ecdsa"
+        elif key_type == 3:
+            a = False
+            return "ecdsa-sk"
+        elif key_type == 4:
+            a = False
+            return "ed25519"
+        elif key_type == 5:
+            a = False
+            return "ed25519-sk"
+        elif key_type == 6:
+            a = False
+            return "dsa"
+        else:
+            print("Wrong Response")
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        print('Welcome!! You are in interactive mode\nThe following accounts are available ')
+        print('Welcome!! You are in interactive mode.')
+        with open(os.path.expanduser('~/.multigit/data.json')) as data_file:
+            acc_list = json.load(data_file)
+            if acc_list != '':
+                print(f"The following accounts are available:\n{'No.':4}{'Username':>10}{'email':>20}{'key':>20}")
+                for i,j in enumerate(acc_list):
+                    print(f'{i+1:4}{acc_list["acc_name"]:>10}{acc_list["email"]}{acc_list["key_loc"]:>20}')
+            response = input(f"The following actions are available:\n{'1.':4}Add accounts\n{'2.':4}Remove accounts\n{'3.':4}Exit Interactive mode.\nType 1 or 2 and hit enter\n")
+            a= True
+            while a == True:
+                if response == '1':
+                    a=False
+                    username = input("Enter the account name(github username, bitbucket username etc.): ")
+                    email = input("Enter the email associated with the account: ")
+                    key_type = ask_keytype()
+                    
+
+                elif response == '2':
+                    a=False
+
+                elif response == '3':
+                    a=False
+
+
+            
+
+                
     
     elif len(sys.argv) == 2:
         acc_name = sys.argv[1]
-        with open('data.json') as data_file:
+        with open(os.path.expanduser('~/.multigit/data.json')) as data_file:
             acc_list = json.load(data_file)
             for i in acc_list:
                 if i['acc_name'] == acc_name:
@@ -24,7 +74,7 @@ if __name__ == "__main__":
                     except KeyError:                    
                             subprocess.run(['eval', '$(ssh-agent -s)'])
                     subprocess.run(['ssh-add', i['key_loc']])
-                    with open('script.sh','w') as script:
+                    with open(os.path.expanduser('~/.multigit/'),'w') as script:
                         script.write(f'#!/bin/bash\n\ngit config --global user.name {acc_name}\ngit config --global user.email {i['email']}\neval $(ssh-agent -s)\nssh-add {i['key_loc']}\n')
                         print(f"Account has been changed to {acc_name}")
 
