@@ -4,14 +4,15 @@ import shutil
 import glob
 import json
 
+
 def check_shell():
     try:
         shell = os.environ['SHELL']
-        if shell.find('bash')!= -1:
-            profile = os.path.expanduser('~/.bashrc')
+        if shell.find('bash') != -1:
+            profile = os.path.expanduser('~/.bash_profile')
             logout_profile = os.path.expanduser('~/.bash_logout')
-        elif shell.find('zsh')!= -1:
-            profile = os.path.expanduser('~/.zshrc')
+        elif shell.find('zsh') != -1:
+            profile = os.path.expanduser('~/.zsh_profile')
             logout_profile = os.path.expanduser('~/.zlogout')
 
         home = os.path.expanduser('~/')
@@ -23,7 +24,7 @@ def check_shell():
                 if script in f.read():
                     print('Setup is already complete')
                 else:
-                    f.seek(0,2)
+                    f.seek(0, 2)
                     f.write(script)
                     g.write(logout_script)
 
@@ -32,9 +33,10 @@ def check_shell():
         profile = None
         logout_profile = None
 
+
 def cp_scripts():
     instl_loc = os.path.expanduser('~/.multigit')
-    if os.path.isdir(instl_loc) != True:
+    if os.path.isdir(instl_loc) is not True:
         os.mkdir(instl_loc)
         repo_dir = Path(__file__).parent.resolve()
         file1_path = repo_dir / 'scripts' / 'script.sh'
@@ -42,14 +44,14 @@ def cp_scripts():
         shutil.copy(file1_path, instl_loc)
         shutil.copy(file2_path, instl_loc)
     a = True
-    while a == True:
-    
+    while a:
+
         response = input("Do you want to detect older keys ?\nType y or n and hit enter\n")
         if (response == 'y'):
             a = False
             detect_keys()
 
-        elif(response == 'n'):
+        elif (response == 'n'):
             a= False
         else:
             print("Wrong response!! Answer in y or n")
@@ -72,8 +74,8 @@ def detect_keys():
                 a=False
                 acc_list = []
                 for i,j in enumerate(key_list):
-                    b = True 
-                    while b == True:
+                    b = True
+                    while b:
                         decision= input(f"Do you want to associate an account with the key: {j}\nType y or n and hit enter.\n")
                         if decision == 'n':
                             b=False
@@ -89,7 +91,7 @@ def detect_keys():
                 acc_file = os.path.expanduser('~/.multigit/data.json')
                 with open(acc_file, 'w+') as f:
                     json.dump(acc_list, f)
-                
+
             elif response == 'n':
                 a=False
             else:
@@ -100,4 +102,4 @@ if __name__ == "__main__":
     check_shell()
     cp_scripts()
     print("Setup is now complete. Type\nmultigit [ACC_NAME]\nwhere [ACC_NAME] has to be replaced with the username of git account to activate that account.For example\n multigit pkradiator\n will switch account to pkradiator.\nIf you are unsure just type multigit without any arguments to start interactive mode.\nEnjoy!!\n")
-    
+
